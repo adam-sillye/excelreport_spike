@@ -31,16 +31,18 @@ public class App
         // excel fájlbaírás
         try {
             ExcelReport(
-                LocalDateTime.now(),
-                "AL",
-                "20220601",
-                "2022",
-                "Quarterly",
-                "3",
-                61262,
-                31.695650,
-                33.721518,
-                387.032666
+                new Overall(
+                    LocalDateTime.now(),
+                    "AL",
+                    "20220601",
+                    "2022",
+                    "Quarterly",
+                    "3",
+                    61262,
+                    31.695650,
+                    33.721518,
+                    387.03266
+                )
             );
             System.out.println("Ready");
         } catch (IOException e) {
@@ -48,20 +50,10 @@ public class App
         }
     }
 
-    public static void ExcelReport(LocalDateTime date,
-        String region, 
-        String mapversion, 
-        String year, 
-        String periodicity, 
-        String period,
-        int count,
-        double mape,
-        double smape,
-        double rmse // aren't this float?
-        ) throws IOException {
+    public static void ExcelReport(Overall overall) throws IOException {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("AL");
+        XSSFSheet sheet = workbook.createSheet(overall.getRegion());
         sheet.setColumnWidth(0, 7000);
 
         Object[][] data = {
@@ -69,19 +61,19 @@ public class App
             {},
             { "Metadata" },
             {},
-            { "Run date", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) },
-            { "Region", region },
-            { "Map Version", mapversion },
-            { "Year", year },
-            { "Periodicity", periodicity },
-            { "Period", period },
+            { "Run date", overall.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) },
+            { "Region", overall.getRegion() },
+            { "Map Version", overall.getMapversion() },
+            { "Year", overall.getYear() },
+            { "Periodicity", overall.getPeriodicity() },
+            { "Period", overall.getPeriod() },
             {},
             { "GTD Correlation summary" },
             {},
-            { "Count", count },
-            { "MAPE", mape },
-            { "SMAPE", smape },
-            { "RMSE", rmse }
+            { "Count", overall.getCount() },
+            { "MAPE", overall.getMape() },
+            { "SMAPE", overall.getSmape() },
+            { "RMSE", overall.getRmse() }
         };
  
         int rowCount = 0;
